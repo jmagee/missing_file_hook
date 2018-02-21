@@ -1,0 +1,62 @@
+#!/bin/bash
+# Installs a pre-commit hook to check if files may be missing from the commit.
+# No installation will be performed if a pre-commit hook already exists.
+# In that case, manually install the hook.
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 git-repo"
+  exit 1
+fi
+
+repo=$1
+
+if [ ! -d $repo/.git ]; then
+  echo "Error: Not in git repository"
+  exit 1
+fi
+
+if [ -f $repo/.git/hooks/pre-commit ]; then
+  echo "$repo/.git/hooks/pre-commit already exists."
+  echo "Please install hook manually."
+  exit 1
+fi
+
+(cat << "MISSING_FILE_HOOK"
+#!/bin/bash
+# Check if a potential commit may be missing a required file.
+# We use a very basic heuristic here:
+#  - Go through all the untracked files and check if any appear in the cached
+#    diff.
+#
+# Perhaps overly simple, but it catches the majority of boneheaded cases where
+# I forgot to add a new file.
+
+skipmissing=$(git config --bool hooks.skipmissing)
+
+if [ "$skipmissing" != "true" ]; then
+  untracked_files=$(git ls-files --others --exclude-standard)
+  diff=$(git diff --cached | grep "^+.*")
+
+  for x in $untracked_files ; do
+    case $diff in
+      *${x}*)
+        echo "Did you mean to git add $x?"
+        echo "It is listed as an untracked file, but appears in your diff."
+        echo "(To suppress this error, either:"
+        echo "  Add $x to .gitignore"
+        echo "  Delete $x (use caution!)"
+        echo "  git config --add hooks.skipmissing true"
+        echo "  use --no-verify)"
+        exit 1
+        ;;
+    esac
+  done
+fi
+
+exit 0
+MISSING_FILE_HOOK
+)  > $repo/.git/hooks/pre-commit
+
+echo "Pre-commit hook installed here: $repo/.git/hooks/pre-commit"
+
+exit 0
