@@ -57,6 +57,7 @@ exit 0
 MISSING_FILE_HOOK
 )  > $repo/.git/hooks/pre-commit
 
+chmod a+x $repo/.git/hooks/pre-commit
 echo "Pre-commit hook installed here: $repo/.git/hooks/pre-commit"
 
 exit 0
