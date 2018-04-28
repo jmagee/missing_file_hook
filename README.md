@@ -3,7 +3,7 @@ The Problem
 The following has happened to me an embarrassing number of times, and I've seen
 it happen to many others: A new source file is created and added to the build
 system, but not added to the git commit.  This typically results in a shameful
-build break either when CI does it job or someone else pulls the change.
+build break either when CI does its job or someone else pulls the change.
 
 The Solution
 ============
