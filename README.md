@@ -1,6 +1,6 @@
 The Problem
 ===========
-The following has happened to me an emberassing number of times, and I've seen
+The following has happened to me an embarrassing number of times, and I've seen
 it happen to many others: A new source file is created and added to the build
 system, but not added to the git commit.  This typically results in a shameful
 build break either when CI does it job or someone else pulls the change.
@@ -33,7 +33,7 @@ Usage
 The script will refuse to install if .git/hooks/pre-commit already exists.  In
 that case, you should integrate the script manually.
 
-If you want to remote the hook, then remove .git/hooks/pre-commit manually.
+If you want to remove the hook, then remove .git/hooks/pre-commit manually.
 
 Potential Other Approaches
 ==========================
