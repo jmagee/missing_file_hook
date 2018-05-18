@@ -38,8 +38,9 @@ if [ "$skipmissing" != "true" ]; then
   diff=$(git diff --cached | grep "^+.*")
 
   for x in $untracked_files ; do
+    f=$(basename $x)
     case $diff in
-      *${x}*)
+      *${f}*)
         echo "Did you mean to git add $x?"
         echo "It is listed as an untracked file, but appears in your diff."
         echo "(To suppress this error, either:"
